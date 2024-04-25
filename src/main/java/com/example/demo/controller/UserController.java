@@ -6,7 +6,6 @@ import com.example.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import com.example.demo.entities.UserClass;
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -60,7 +59,7 @@ public class UserController {
           existingUser.setUsername(user.getUsername());
           existingUser.setEmail(user.getEmail());
           existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
-          existingUser.setIsAdmin(user.getIsAdmin());
+          existingUser.setAdmin(user.isAdmin());
           log.info("Updated user with id: {}", id);
           return ResponseEntity.ok(userService.createOrUpdateUser(existingUser));
         })

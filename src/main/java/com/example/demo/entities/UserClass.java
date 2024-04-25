@@ -34,11 +34,7 @@ public class UserClass {
   @Column(name = "is_admin", nullable = false)
   private boolean isAdmin;
 
-  public boolean getIsAdmin() {
-    return isAdmin;
-  }
-
-  public void setIsAdmin(boolean isAdmin) {
-    this.isAdmin = isAdmin;
+  public UserClass(){
+    isAdmin = false;
   }
 }

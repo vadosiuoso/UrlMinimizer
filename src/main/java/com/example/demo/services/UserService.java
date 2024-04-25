@@ -1,5 +1,6 @@
 package com.example.demo.services;
 
+import com.example.demo.dto.RegistrationUserDto;
 import com.example.demo.entities.UserClass;
 
 import java.util.List;
@@ -10,7 +11,7 @@ public interface UserService {
   UserClass findByUsername(String username);
   List<UserClass> findAllUsers();
   void deleteUser(Long id);
-  UserClass createOrUpdateUser(UserClass userClass);
+  UserClass createOrUpdateUser(RegistrationUserDto registrationUserDto);
   Optional<UserClass> findByUsernameOrEmail(String usernameOrEmail);
 
 

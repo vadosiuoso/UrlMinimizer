@@ -1,10 +1,11 @@
 package com.example.demo.services;
 
 
-import com.example.demo.dto.UserDto;
+import com.example.demo.dto.RegistrationUserDto;
 import com.example.demo.entities.UserClass;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +17,8 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService{
 
   private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
+
   @Override
   public Optional<UserClass> findById(Long id) {
     return userRepository.findById(id);
@@ -39,8 +42,12 @@ public class UserServiceImpl implements UserService{
 
   @Override
   @Transactional
-  public UserClass createOrUpdateUser(UserClass user) {
-    return userRepository.save(user);
+  public UserClass createOrUpdateUser(RegistrationUserDto registrationUserDto) {
+    UserClass userClass = new UserClass();
+    userClass.setUsername(registrationUserDto.getUsername());
+    userClass.setEmail(registrationUserDto.getEmail());
+    userClass.setPassword(passwordEncoder.encode(registrationUserDto.getPassword()));
+    return userRepository.save(userClass);
   }
 
   @Override
