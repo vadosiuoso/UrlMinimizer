@@ -10,7 +10,7 @@ public interface UserService {
   UserClass findByUsername(String username);
   List<UserClass> findAllUsers();
   void deleteUser(Long id);
-  void createOrUpdateUser(UserClass userClass);
+  UserClass createOrUpdateUser(UserClass userClass);
   Optional<UserClass> findByUsernameOrEmail(String usernameOrEmail);
 
 

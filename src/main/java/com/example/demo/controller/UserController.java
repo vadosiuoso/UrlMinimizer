@@ -1,6 +1,8 @@
 package com.example.demo.controller;
 
 import java.util.List;
+
+import com.example.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import com.example.demo.entities.UserClass;
 import com.example.demo.exception.ResourceNotFoundException;
@@ -19,20 +21,20 @@ public class UserController {
 
   public static final String USER_NOT_FOUND_WITH_ID = "User not found with id:";
   private static final Logger log = LoggerFactory.getLogger(UserController.class);
-  private final UserRepository userRepository;
+  private final UserService userService;
   private final PasswordEncoder passwordEncoder;
 
   @GetMapping
   public ResponseEntity<List<UserClass>> getAllUsers() {
     log.info("Fetching all users");
-    List<UserClass> users = userRepository.findAll();
+    List<UserClass> users = userService.findAllUsers();
     return ResponseEntity.ok(users);
   }
 
   @GetMapping("/{id}")
   public ResponseEntity<UserClass> getUserById(@PathVariable Long id) {
     log.info("Fetching user by id: {}", id);
-    UserClass user = userRepository.findById(id)
+    UserClass user = userService.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_WITH_ID + " " + id));
     return ResponseEntity.ok(user);
   }
@@ -45,7 +47,7 @@ public class UserController {
       return ResponseEntity.badRequest().body(null);
     }
     user.setPassword(passwordEncoder.encode(user.getPassword()));
-    UserClass createdUser = userRepository.save(user);
+    UserClass createdUser = userService.createOrUpdateUser(user);
     log.info("Created user with username: {}", user.getUsername());
     return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
   }
@@ -53,14 +55,14 @@ public class UserController {
   @PutMapping("/{id}")
   public ResponseEntity<UserClass> updateUser(@PathVariable Long id, @RequestBody UserClass user) {
     log.info("Updating user with id: {}", id);
-    return userRepository.findById(id)
+    return userService.findById(id)
         .map(existingUser -> {
           existingUser.setUsername(user.getUsername());
           existingUser.setEmail(user.getEmail());
           existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
           existingUser.setIsAdmin(user.getIsAdmin());
           log.info("Updated user with id: {}", id);
-          return ResponseEntity.ok(userRepository.save(existingUser));
+          return ResponseEntity.ok(userService.createOrUpdateUser(existingUser));
         })
         .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_WITH_ID + " " + id));
   }
@@ -68,8 +70,8 @@ public class UserController {
   @DeleteMapping("/{id}")
   public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
     log.info("Attempting to delete user with id: {}", id);
-    userRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_WITH_ID + " " + id));
-    userRepository.deleteById(id);
+    userService.findById(id).orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_WITH_ID + " " + id));
+    userService.deleteUser(id);
     log.info("Deleted user with id: {}", id);
     return ResponseEntity.noContent().build();
   }
