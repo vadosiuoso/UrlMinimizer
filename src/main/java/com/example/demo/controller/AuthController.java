@@ -2,7 +2,12 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.JwtRequest;
 import com.example.demo.dto.JwtResponse;
+import com.example.demo.dto.RegistrationUserDto;
+import com.example.demo.entities.UserClass;
+import com.example.demo.services.UserService;
 import com.example.demo.util.JwtTokenUtil;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
@@ -10,22 +15,22 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 
 @RestController
 @RequestMapping("/api/auth")
+@RequiredArgsConstructor
 public class AuthController {
 
   private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
   private final AuthenticationManager authenticationManager;
   private final JwtTokenUtil jwtTokenUtil;
+  private final UserService userService;
+  private final PasswordEncoder passwordEncoder;
 
-  public AuthController(AuthenticationManager authenticationManager, JwtTokenUtil jwtTokenUtil) {
-    this.authenticationManager = authenticationManager;
-    this.jwtTokenUtil = jwtTokenUtil;
-  }
 
   @PostMapping("/login")
   public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) {
@@ -42,6 +47,15 @@ public class AuthController {
     return ResponseEntity.ok(new JwtResponse(token));
   }
 
+  @PostMapping("/register")
+  public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationUserDto registrationUserDto) {
+    UserClass userClass = new UserClass();
+    userClass.setUsername(registrationUserDto.getUsername());
+    userClass.setEmail(registrationUserDto.getEmail());
+    userClass.setPassword(passwordEncoder.encode(registrationUserDto.getPassword()));
+    userService.createOrUpdateUser(userClass);
+    return ResponseEntity.ok(userClass);
+  }
 
   @GetMapping("/test")
   public String getName(Principal principal){
