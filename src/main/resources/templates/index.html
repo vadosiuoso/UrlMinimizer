@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="" type="image/x-icon">
+  <link rel="stylesheet" th:href="@{/styles/main.css}">
+  <title>Minimalizes</title>
+</head>
+<body>
+<header>
+  <div class="logo">
+    <a href="index.html" th:href="@{/}"><img class="logoImg"
+                                             th:src="@{/images/icons8-ионный.svg}" width="50"
+                                             height="50" alt="Головна"></a>
+  </div>
+  <div class="user">
+    <a href="login.html" th:href="@{login}">Вхід</a>
+    <a href="reg.html" th:href="@{reg}">Реєстрація</a>
+  </div>
+</header>
+<div class="mainDiv">
+  <div>
+    <div class="folDiv">
+      <h1>Скоротіть посилання</h1>
+      <h2>Найкращий інструмент для цього тільки у нас</h2>
+      <div class="form-group justify-content-center d-flex">
+        <form class="inPut" id="urlForm" onsubmit="sendData(); return false;">
+          <input type="text" id="input-url" class="url-input" name="url" required placeholder="Вставте посилання">
+          <button class="button main-btn main-btn_primary" type="submit">Скоротити</button>
+        </form>
+        <script>
+          function sendData() {
+            const urlValue = document.getElementById('input-url').value;
+            fetch('/api/v1/urls', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({ originalUrl: urlValue })
+            })
+                .then(response => response.json())
+                .then(data => console.log(data))
+                .catch(error => console.error('Error:', error));
+          }
+        </script>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,101 @@
+body{
+    margin: 0;
+}
+
+header{
+    height: 55px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin:0 40px;
+}
+.user a{
+    font-size: 20px;
+    color: black;
+    text-decoration: none;
+    margin: 0 5px;
+}
+.user a:hover {
+    color: darkblue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+.mainDiv{
+    height: 350px;
+    border: 1px solid #000;
+    display: flex;
+    justify-content: center;
+    margin: 0;
+    background-color: darkblue;
+    color: white;
+}
+.folDiv{
+    height: 350px;
+    width: 70%;
+    border: 1px solid #000;
+    display: table-row;
+    justify-content: center;
+    text-align: center;
+}
+.justify-content-center{
+    justify-content: center !important;
+}
+.inPut{
+    align-items: center;
+    display: flex;
+    flex-flow: row wrap;
+}
+input[type="hidden"]{
+    appearance: none;
+    background-color: initial;
+    cursor: default;
+    display: none !important;
+    padding: initial;
+    border: initial;
+}
+input[type=text]{
+    height: 55px!important;
+}
+.url-input {
+    border: 1px solid #000;
+    border-radius: 4px;
+    color: grey;
+    display: inline-block;
+    height: 56px;
+    padding-left: 3em;
+    vertical-align: middle;
+    width: 728px;
+}
+button, input {
+    overflow: visible;
+}
+button:not(:disabled) {
+    cursor: pointer;
+}
+.main-btn_primary {
+    background-color: #c6262f;
+}
+.main-btn {
+    color: #fff;
+    margin-left: 1em;
+}
+.button {
+    background: red;
+    border: none;
+    border-radius: 4px;
+    box-shadow: 0 4px 4px rgba(0,0,0,.25);
+    display: inline;
+    padding: 1em 1.5em;
+    text-align: center;
+}
+.button, body {
+    font-family: Rubik,sans-serif;
+    font-size: 16px;
+    line-height: 24px;
+}
+button, input{
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    margin: 0;
+}

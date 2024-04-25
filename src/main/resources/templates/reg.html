@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="uk">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="" type="image/x-icon">
+  <link rel="stylesheet" th:href="@{/styles/regSt.css}">
+  <title>Реєстрація</title>
+</head>
+
+<body>
+<header>
+  <div class="logo">
+    <a href="index.html" th:href="@{/}">
+      <img class="logoImg" th:src="@{/images/icons8-ионный.svg}" width="50" height="50">
+    </a>
+  </div>
+</header>
+<main>
+  <h1>Реєстрація</h1>
+  <form th:action="@{/register}" method="post">
+<!--    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>-->
+    Ім'я користувача: <input type="text" name="username" required> <br><br>
+    Електронна пошта: <input type="email" name="email" required><br><br>
+    Пароль: <input type="password" name="password" required minlength="8"><br><br>
+    <button type="submit">Зареєструватися</button>
+  </form>
+</main>
+
+</body>
+</html>

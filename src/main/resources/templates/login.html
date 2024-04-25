@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="" type="image/x-icon">
+  <link rel="stylesheet" th:href="@{/styles/login.css}">
+  <title>Minimalizes</title>
+</head>
+
+<body>
+<header>
+  <div class="logo">
+    <a th:href="@{/}"><img class="logoImg" th:src="@{/images/icons8-ионный.svg}" width="50" height="50"></a>
+  </div>
+</header>
+<main>
+  <h1>Вхід</h1>
+  <form th:action="@{/perform_login}" method="post">
+<!--    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>-->
+    Емайл: <input type="text" name="username" required><br><br> <!-- username використовується тут для узгодження з очікуваннями Spring Security -->
+    Пароль: <input type="password" name="password" required><br><br>
+    <button class="button" type="submit">Вхід</button>
+  </form>
+  <p>Не маєте акаунту? <a th:href="@{/reg}">Зареєструйтесь тут</a></p>
+</main>
+
+</body>
+</html>
