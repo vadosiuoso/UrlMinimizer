@@ -2,7 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.JwtRequest;
 import com.example.demo.dto.JwtResponse;
-import com.example.demo.dto.RegistrationUserDto;
+import com.example.demo.dto.UserDto;
 import com.example.demo.entities.UserClass;
 import com.example.demo.services.UserService;
 import com.example.demo.util.JwtTokenUtil;
@@ -15,7 +15,6 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -47,7 +46,7 @@ public class AuthController {
   }
 
   @PostMapping("/register")
-  public ResponseEntity<?> registerUser(@Valid @RequestBody RegistrationUserDto registrationUserDto) {
+  public ResponseEntity<?> registerUser(@Valid @RequestBody UserDto registrationUserDto) {
     UserClass userClass = userService.createOrUpdateUser(registrationUserDto);
     return ResponseEntity.ok(userClass);
   }

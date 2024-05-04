@@ -32,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     log.info("Email of user : {}", user.getEmail());
     return User.withUsername(user.getUsername())
         .password(user.getPassword())
-        .authorities(user.getIsAdmin() ? "ADMIN" : "USER")
+        .authorities(user.isAdmin() ? "ADMIN" : "USER")
         .accountExpired(false)
         .accountLocked(false)
         .credentialsExpired(false)

@@ -1,7 +1,7 @@
 package com.example.demo.services;
 
 
-import com.example.demo.dto.RegistrationUserDto;
+import com.example.demo.dto.UserDto;
 import com.example.demo.entities.UserClass;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService{
 
   @Override
   @Transactional
-  public UserClass createOrUpdateUser(RegistrationUserDto registrationUserDto) {
+  public UserClass createOrUpdateUser(UserDto registrationUserDto) {
     UserClass userClass = new UserClass();
     userClass.setUsername(registrationUserDto.getUsername());
     userClass.setEmail(registrationUserDto.getEmail());

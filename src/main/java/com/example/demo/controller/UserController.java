@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.util.List;
 
+import com.example.demo.dto.UserDto;
 import com.example.demo.services.UserService;
 import lombok.RequiredArgsConstructor;
 import com.example.demo.entities.UserClass;
@@ -39,7 +40,7 @@ public class UserController {
   }
 
   @PostMapping
-  public ResponseEntity<UserClass> createUser(@RequestBody UserClass user) {
+  public ResponseEntity<UserClass> createUser(@RequestBody UserDto user) {
     log.info("Creating a new user with username: {}", user.getUsername());
     if (user.getPassword().length() < 8 || !user.getPassword().matches(".*\\d.*")) {
       log.error("Password validation failed for user: {}", user.getUsername());
@@ -52,16 +53,15 @@ public class UserController {
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<UserClass> updateUser(@PathVariable Long id, @RequestBody UserClass user) {
+  public ResponseEntity<UserClass> updateUser(@PathVariable Long id, @RequestBody UserDto user) {
     log.info("Updating user with id: {}", id);
     return userService.findById(id)
         .map(existingUser -> {
           existingUser.setUsername(user.getUsername());
           existingUser.setEmail(user.getEmail());
           existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
-          existingUser.setAdmin(user.isAdmin());
           log.info("Updated user with id: {}", id);
-          return ResponseEntity.ok(userService.createOrUpdateUser(existingUser));
+          return ResponseEntity.ok(userService.createOrUpdateUser(user));
         })
         .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_WITH_ID + " " + id));
   }

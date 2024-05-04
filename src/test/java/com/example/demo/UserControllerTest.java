@@ -35,7 +35,7 @@ public class UserControllerTest {
     user.setUsername("testUser");
     user.setEmail("test@example.com");
     user.setPassword("password123");
-    user.setIsAdmin(false);
+    user.setAdmin(false);
 
     when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
     when(userRepository.save(user)).thenReturn(user);

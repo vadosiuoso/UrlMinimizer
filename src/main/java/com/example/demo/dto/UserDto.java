@@ -2,13 +2,12 @@ package com.example.demo.dto;
 
 
 import com.example.demo.anotation.UniqueUsername;
-import jakarta.annotation.sql.DataSourceDefinition;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 @Data
-public class RegistrationUserDto {
+public class UserDto {
   @UniqueUsername()
   private String username;
   private String email;
