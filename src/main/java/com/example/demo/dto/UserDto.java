@@ -5,7 +5,9 @@ import com.example.demo.anotation.UniqueUsername;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
+import org.springframework.validation.annotation.Validated;
 
+@Validated
 @Data
 public class UserDto {
   @UniqueUsername()

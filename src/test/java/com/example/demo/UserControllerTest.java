@@ -5,8 +5,10 @@ import static org.mockito.Mockito.*;
 import java.util.Optional;
 
 import com.example.demo.controller.UserController;
+import com.example.demo.dto.UserDto;
 import com.example.demo.entities.UserClass;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.services.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +23,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class UserControllerTest {
 
   @Mock
-  private UserRepository userRepository;
+  private UserService userService;
 
   @Mock
   private PasswordEncoder passwordEncoder;
@@ -29,16 +31,20 @@ public class UserControllerTest {
   @InjectMocks
   private UserController userController;
 
+
+
   @Test
   public void testCreateUser() {
-    UserClass user = new UserClass();
+    UserDto user = new UserDto();
     user.setUsername("testUser");
     user.setEmail("test@example.com");
     user.setPassword("password123");
-    user.setAdmin(false);
+    UserClass userEntity = new UserClass();
+    userEntity.set
+
 
     when(passwordEncoder.encode("password123")).thenReturn("encodedPassword");
-    when(userRepository.save(user)).thenReturn(user);
+    when(userService.createOrUpdateUser(user)).thenReturn(user);
 
     ResponseEntity<UserClass> response = userController.createUser(user);
 
@@ -50,7 +56,7 @@ public class UserControllerTest {
   public void testDeleteUser() {
     Long userId = 1L;
 
-    when(userRepository.existsById(userId)).thenReturn(true);
+    when(userService.findById(userId)).thenReturn(true);
 
     ResponseEntity<Void> response = userController.deleteUser(userId);
 
@@ -66,9 +72,9 @@ public class UserControllerTest {
     user.setUsername("testUser");
     user.setEmail("test@example.com");
     user.setPassword("password123");
-    user.setIsAdmin(false);
+    user.setAdmin(false);
 
-    when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+    when(userService.findById(userId)).thenReturn(Optional.of(user));
 
     ResponseEntity<UserClass> response = userController.getUserById(userId);
 
