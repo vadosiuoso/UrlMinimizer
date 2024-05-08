@@ -10,11 +10,14 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -49,6 +52,17 @@ public class AuthController {
   public ResponseEntity<?> registerUser(@Valid @RequestBody UserDto registrationUserDto) {
     UserClass userClass = userService.createOrUpdateUser(registrationUserDto);
     return ResponseEntity.ok(userClass);
+  }
+
+  @ExceptionHandler(MethodArgumentNotValidException.class)
+  @ResponseStatus(HttpStatus.BAD_REQUEST)
+  public ResponseEntity<?> handleValidationExceptions(MethodArgumentNotValidException ex) {
+    BindingResult result = ex.getBindingResult();
+    StringBuilder errorMessage = new StringBuilder("Validation error(s): ");
+    for (org.springframework.validation.FieldError fieldError : result.getFieldErrors()) {
+      errorMessage.append(fieldError.getDefaultMessage()).append(", ");
+    }
+    return ResponseEntity.badRequest().body(errorMessage.toString());
   }
 
   @GetMapping("/test")
