@@ -2,20 +2,19 @@ package com.example.demo.repository;
 
 import java.util.*;
 import java.util.Optional;
-import com.example.demo.entities.UrlClass;
+import com.example.demo.entity.Url;
 
-import com.example.demo.entities.UserClass;
+import com.example.demo.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UrlRepository extends JpaRepository<UrlClass, Long> {
-  Optional<UrlClass> findByShortUrl(String shortUrl);
+public interface UrlRepository extends JpaRepository<Url, Long> {
+  Optional<Url> findByShortUrl(String shortUrl);
 
-  List<UrlClass> findAllByUser(UserClass user);
+  List<Url> findAllByUser(User user);
 
-  Optional<UrlClass> deleteByLinkId(Long id);
+  void deleteById(Long id);
 
 
 

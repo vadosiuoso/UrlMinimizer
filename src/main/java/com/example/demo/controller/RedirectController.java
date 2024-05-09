@@ -1,13 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.services.UrlService;
+import com.example.demo.service.UrlService;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 
-import com.example.demo.entities.UrlClass;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.UrlRepository;
+import com.example.demo.entity.Url;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,9 +26,9 @@ public class RedirectController {
   @GetMapping("/{shortUrl:[a-zA-Z0-9]{6,8}}")
   public ResponseEntity<?> redirectToOriginalUrl(@PathVariable String shortUrl, HttpServletResponse response) {
     log.info("Searching for short URL: {}", shortUrl);
-    Optional<UrlClass> url = urlService.findByShortUrl(shortUrl);
+    Optional<Url> url = urlService.findByShortUrl(shortUrl);
     if(url.isPresent()){
-      UrlClass urlClass = url.get();
+      Url urlClass = url.get();
       urlClass.setCountOfCalls(urlClass.getCountOfCalls() + 1);
       urlService.createOrUpdate(urlClass);
       try{

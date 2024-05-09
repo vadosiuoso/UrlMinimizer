@@ -1,24 +1,23 @@
-package com.example.demo.entities;
+package com.example.demo.entity;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import lombok.Data;
 
 @Entity
 @Data
 @Table(name = "links")
-public class UrlClass {
+public class Url {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name = "link_id")
-  private Long linkId;
+  @Column(name = "id")
+  private Long id;
 
   @ManyToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "user_id", referencedColumnName = "user_id")
-  private UserClass user;
+  @JoinColumn(name = "user_id", referencedColumnName = "id")
+  private User user;
 
   @Column(name = "original_url", nullable = false)
   private String originalUrl;
@@ -32,7 +31,7 @@ public class UrlClass {
   @Column(name = "creation_date")
   private LocalDateTime creationDate;
 
-  public UrlClass() {
+  public Url() {
     this.countOfCalls = 0;
     this.creationDate = LocalDateTime.now();
   }

@@ -1,19 +1,29 @@
 package com.example.demo.security;
 
 import com.example.demo.security.JwtRequestFilter;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
+
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -24,32 +34,32 @@ public class SecurityConfig {
     http
         .csrf(AbstractHttpConfigurer::disable)
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/static/**",
-                "/css/**", "/js/**", "/images/**",
-                "/register", "/api/v1/users/**", "/reg", "/login").permitAll()
+            .requestMatchers("/api/v1/users/**").hasRole("ADMIN")
+            .requestMatchers("/api/v1/urls/**").authenticated()
             .requestMatchers("/api/auth/**").permitAll()
-            .requestMatchers("/api/v1/urls/**").permitAll()
             .requestMatchers("/{shortUrl}").permitAll()
-            .requestMatchers("/", "/{shortUrl}").permitAll()
             .anyRequest().authenticated()
+//            .requestMatchers("/", "/{shortUrl}").permitAll()
         )
-        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class)
-        .formLogin(formLogin -> formLogin
-            .loginPage("/login")
-            .loginProcessingUrl("/perform_login")
-            .defaultSuccessUrl("/", true)
-            .failureUrl("/login?error=true")
-            .permitAll()
-        )
-        .logout(logout -> logout
-            .logoutUrl("/perform_logout")
-            .deleteCookies("JSESSIONID")
-            .logoutSuccessUrl("/login?logout=true")
-            .permitAll()
-        )
-        .exceptionHandling(exceptions -> exceptions
-            .accessDeniedPage("/access-denied")
-        );
+        .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        .exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+        .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+//        .formLogin(formLogin -> formLogin
+//            .loginPage("/login")
+//            .loginProcessingUrl("/perform_login")
+//            .defaultSuccessUrl("/", true)
+//            .failureUrl("/login?error=true")
+//            .permitAll()
+//        )
+//        .logout(logout -> logout
+//            .logoutUrl("/perform_logout")
+//            .deleteCookies("JSESSIONID")
+//            .logoutSuccessUrl("/login?logout=true")
+//            .permitAll()
+//        )
+//        .exceptionHandling(exceptions -> exceptions
+//            .accessDeniedPage("/access-denied")
+//        );
     return http.build();
   }
 

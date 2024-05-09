@@ -1,5 +1,6 @@
 package com.example.demo.security;
 import com.example.demo.util.JwtTokenUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,15 +15,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 public class JwtRequestFilter extends OncePerRequestFilter {
 
   private final UserDetailsService userDetailsService;
   private final JwtTokenUtil jwtTokenUtil;
-
-  public JwtRequestFilter(UserDetailsService userDetailsService, JwtTokenUtil jwtTokenUtil) {
-    this.userDetailsService = userDetailsService;
-    this.jwtTokenUtil = jwtTokenUtil;
-  }
 
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)

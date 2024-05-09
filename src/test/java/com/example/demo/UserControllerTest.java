@@ -2,13 +2,12 @@ package com.example.demo;
 
 import static org.mockito.Mockito.*;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.example.demo.controller.UserController;
-import com.example.demo.dto.UserDto;
-import com.example.demo.entities.UserClass;
-import com.example.demo.repository.UserRepository;
-import com.example.demo.services.UserService;
+import com.example.demo.entity.User;
+import com.example.demo.service.UserService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -67,16 +66,16 @@ public class UserControllerTest {
   @Test
   public void testGetUserById() {
     Long userId = 1L;
-    UserClass user = new UserClass();
-    user.setUserId(userId);
+    User user = new User();
+    user.setId(userId);
     user.setUsername("testUser");
     user.setEmail("test@example.com");
     user.setPassword("password123");
-    user.setAdmin(false);
+    user.setRoles(List.of());
 
     when(userService.findById(userId)).thenReturn(Optional.of(user));
 
-    ResponseEntity<UserClass> response = userController.getUserById(userId);
+    ResponseEntity<User> response = userController.getUserById(userId);
 
     Assertions.assertEquals(HttpStatus.OK, response.getStatusCode());
     Assertions.assertEquals(user, response.getBody());

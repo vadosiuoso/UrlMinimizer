@@ -1,4 +1,4 @@
-package com.example.demo.services;
+package com.example.demo.service;
 
 import org.apache.commons.codec.digest.DigestUtils;
 import org.slf4j.Logger;

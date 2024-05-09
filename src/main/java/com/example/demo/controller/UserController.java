@@ -3,9 +3,9 @@ package com.example.demo.controller;
 import java.util.List;
 
 import com.example.demo.dto.UserDto;
-import com.example.demo.services.UserService;
+import com.example.demo.service.UserService;
 import lombok.RequiredArgsConstructor;
-import com.example.demo.entities.UserClass;
+import com.example.demo.entity.User;
 import com.example.demo.exception.ResourceNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,35 +25,35 @@ public class UserController {
   private final PasswordEncoder passwordEncoder;
 
   @GetMapping
-  public ResponseEntity<List<UserClass>> getAllUsers() {
+  public ResponseEntity<List<User>> getAllUsers() {
     log.info("Fetching all users");
-    List<UserClass> users = userService.findAllUsers();
+    List<User> users = userService.findAllUsers();
     return ResponseEntity.ok(users);
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<UserClass> getUserById(@PathVariable Long id) {
+  public ResponseEntity<User> getUserById(@PathVariable Long id) {
     log.info("Fetching user by id: {}", id);
-    UserClass user = userService.findById(id)
+    User user = userService.findById(id)
         .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_WITH_ID + " " + id));
     return ResponseEntity.ok(user);
   }
 
   @PostMapping
-  public ResponseEntity<UserClass> createUser(@RequestBody UserDto user) {
+  public ResponseEntity<User> createUser(@RequestBody UserDto user) {
     log.info("Creating a new user with username: {}", user.getUsername());
     if (user.getPassword().length() < 8 || !user.getPassword().matches(".*\\d.*")) {
       log.error("Password validation failed for user: {}", user.getUsername());
       return ResponseEntity.badRequest().body(null);
     }
     user.setPassword(passwordEncoder.encode(user.getPassword()));
-    UserClass createdUser = userService.createOrUpdateUser(user);
+    User createdUser = userService.createOrUpdateUser(user);
     log.info("Created user with username: {}", user.getUsername());
     return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<UserClass> updateUser(@PathVariable Long id, @RequestBody UserDto user) {
+  public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UserDto user) {
     log.info("Updating user with id: {}", id);
     return userService.findById(id)
         .map(existingUser -> {

@@ -1,8 +1,9 @@
-package com.example.demo.services;
+package com.example.demo.service;
 
 
 import com.example.demo.dto.UserDto;
-import com.example.demo.entities.UserClass;
+import com.example.demo.entity.User;
+import com.example.demo.repository.RoleRepository;
 import com.example.demo.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -18,19 +19,20 @@ public class UserServiceImpl implements UserService{
 
   private final UserRepository userRepository;
   private final PasswordEncoder passwordEncoder;
+  private final RoleRepository roleRepository;
 
   @Override
-  public Optional<UserClass> findById(Long id) {
+  public Optional<User> findById(Long id) {
     return userRepository.findById(id);
   }
 
   @Override
-  public UserClass findByUsername(String username) {
+  public User findByUsername(String username) {
     return userRepository.findByUsername(username);
   }
 
   @Override
-  public List<UserClass> findAllUsers() {
+  public List<User> findAllUsers() {
     return userRepository.findAll();
   }
 
@@ -42,16 +44,17 @@ public class UserServiceImpl implements UserService{
 
   @Override
   @Transactional
-  public UserClass createOrUpdateUser(UserDto registrationUserDto) {
-    UserClass userClass = new UserClass();
-    userClass.setUsername(registrationUserDto.getUsername());
-    userClass.setEmail(registrationUserDto.getEmail());
-    userClass.setPassword(passwordEncoder.encode(registrationUserDto.getPassword()));
-    return userRepository.save(userClass);
+  public User createOrUpdateUser(UserDto registrationUserDto) {
+    User user = new User();
+    user.setUsername(registrationUserDto.getUsername());
+    user.setEmail(registrationUserDto.getEmail());
+    user.setPassword(passwordEncoder.encode(registrationUserDto.getPassword()));
+    user.setRoles(List.of(roleRepository.findByName("ROLE_USER").get()));
+    return userRepository.save(user);
   }
 
   @Override
-  public Optional<UserClass> findByUsernameOrEmail(String usernameOrEmail) {
+  public Optional<User> findByUsernameOrEmail(String usernameOrEmail) {
     return userRepository.findByUsernameOrEmail(usernameOrEmail);
   }
 
