@@ -40,7 +40,7 @@ public class AuthController {
   @PostMapping("/login")
   public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) {
     logger.info("Attempting to authenticate user: {}", authenticationRequest.getUsername());
-    Authentication authentication = null;
+    Authentication authentication;
     try {
       authentication = authenticationManager.authenticate(
           new UsernamePasswordAuthenticationToken(
@@ -49,7 +49,11 @@ public class AuthController {
           )
       );
     }catch (BadCredentialsException e){
-        return new ResponseEntity<>(new AppError(HttpStatus.UNAUTHORIZED.value(), "Wrong username or password"), HttpStatus.UNAUTHORIZED);
+      logger.debug("Authentication failed");
+        return new ResponseEntity<>(
+            new AppError(HttpStatus.UNAUTHORIZED.value(), "Wrong username or password"),
+            HttpStatus.UNAUTHORIZED
+        );
     }
       assert authentication != null;
       UserDetails userDetails = (UserDetails) authentication.getPrincipal();
