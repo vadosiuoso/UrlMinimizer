@@ -11,6 +11,7 @@ public interface UserService {
   User findByUsername(String username);
   List<User> findAllUsers();
   void deleteUser(Long id);
+  boolean isUserExist(Long id);
   User createOrUpdateUser(UserDto registrationUserDto);
   Optional<User> findByUsernameOrEmail(String usernameOrEmail);
 

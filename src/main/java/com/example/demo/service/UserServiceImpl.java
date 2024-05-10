@@ -43,6 +43,12 @@ public class UserServiceImpl implements UserService{
   }
 
   @Override
+  public boolean isUserExist(Long id) {
+    Optional<User> user = findById(id);
+    return user.isPresent();
+  }
+
+  @Override
   @Transactional
   public User createOrUpdateUser(UserDto registrationUserDto) {
     User user = new User();

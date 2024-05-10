@@ -22,7 +22,6 @@ public class UserController {
   public static final String USER_NOT_FOUND_WITH_ID = "User not found with id:";
   private static final Logger log = LoggerFactory.getLogger(UserController.class);
   private final UserService userService;
-  private final PasswordEncoder passwordEncoder;
 
   @GetMapping
   public ResponseEntity<List<User>> getAllUsers() {
@@ -46,24 +45,17 @@ public class UserController {
       log.error("Password validation failed for user: {}", user.getUsername());
       return ResponseEntity.badRequest().body(null);
     }
-    user.setPassword(passwordEncoder.encode(user.getPassword()));
     User createdUser = userService.createOrUpdateUser(user);
     log.info("Created user with username: {}", user.getUsername());
     return new ResponseEntity<>(createdUser, HttpStatus.CREATED);
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<User> updateUser(@PathVariable Long id, @RequestBody UserDto user) {
+  public ResponseEntity<?> updateUser(@PathVariable Long id, @RequestBody UserDto user) {
     log.info("Updating user with id: {}", id);
-    return userService.findById(id)
-        .map(existingUser -> {
-          existingUser.setUsername(user.getUsername());
-          existingUser.setEmail(user.getEmail());
-          existingUser.setPassword(passwordEncoder.encode(user.getPassword()));
-          log.info("Updated user with id: {}", id);
-          return ResponseEntity.ok(userService.createOrUpdateUser(user));
-        })
-        .orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_WITH_ID + " " + id));
+    userService.findById(id).orElseThrow(() -> new ResourceNotFoundException(USER_NOT_FOUND_WITH_ID + " " + id));
+    log.info("Updated user with id: {}", id);
+    return ResponseEntity.ok(userService.createOrUpdateUser(user));
   }
 
   @DeleteMapping("/{id}")

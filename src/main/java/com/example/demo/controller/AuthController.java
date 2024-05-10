@@ -5,6 +5,8 @@ import com.example.demo.dto.JwtRequest;
 import com.example.demo.dto.JwtResponse;
 import com.example.demo.dto.UserDto;
 import com.example.demo.entity.User;
+import com.example.demo.service.AuthService;
+import com.example.demo.service.CustomUserDetailsService;
 import com.example.demo.service.UserService;
 import com.example.demo.util.JwtTokenUtil;
 import jakarta.validation.Valid;
@@ -31,35 +33,13 @@ import java.security.Principal;
 @RequiredArgsConstructor
 public class AuthController {
 
-  private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
-  private final AuthenticationManager authenticationManager;
-  private final JwtTokenUtil jwtTokenUtil;
   private final UserService userService;
+  private final AuthService authService;
 
 
   @PostMapping("/login")
   public ResponseEntity<?> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) {
-    logger.info("Attempting to authenticate user: {}", authenticationRequest.getUsername());
-    Authentication authentication;
-    try {
-      authentication = authenticationManager.authenticate(
-          new UsernamePasswordAuthenticationToken(
-              authenticationRequest.getUsername(),
-              authenticationRequest.getPassword()
-          )
-      );
-    }catch (BadCredentialsException e){
-      logger.debug("Authentication failed");
-        return new ResponseEntity<>(
-            new AppError(HttpStatus.UNAUTHORIZED.value(), "Wrong username or password"),
-            HttpStatus.UNAUTHORIZED
-        );
-    }
-      assert authentication != null;
-      UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-    String token = jwtTokenUtil.generateToken(userDetails.getUsername());
-    logger.info("Authentication successful for user: {}", userDetails.getUsername());
-    return ResponseEntity.ok(new JwtResponse(token));
+    return authService.createAuthenticationToken(authenticationRequest);
   }
 
   @PostMapping("/register")
